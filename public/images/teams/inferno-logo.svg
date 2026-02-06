@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <linearGradient id="inferno-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#dc2626"/>
+      <stop offset="50%" stop-color="#ea580c"/>
+      <stop offset="100%" stop-color="#fbbf24"/>
+    </linearGradient>
+    <linearGradient id="bg-grad2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1a1a2e"/>
+      <stop offset="100%" stop-color="#0f0f1a"/>
+    </linearGradient>
+    <filter id="glow2">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="95" fill="url(#bg-grad2)" stroke="url(#inferno-grad)" stroke-width="3"/>
+  <!-- Flame shape -->
+  <g filter="url(#glow2)">
+    <path d="M100 35 
+             C85 55, 60 70, 60 100 
+             C60 130, 75 155, 100 165 
+             C125 155, 140 130, 140 100 
+             C140 70, 115 55, 100 35 Z" 
+          fill="url(#inferno-grad)"/>
+    <!-- Inner flame -->
+    <path d="M100 60 
+             C90 75, 75 85, 75 105 
+             C75 125, 85 140, 100 145 
+             C115 140, 125 125, 125 105 
+             C125 85, 110 75, 100 60 Z" 
+          fill="#fbbf24" opacity="0.8"/>
+    <!-- Core -->
+    <ellipse cx="100" cy="115" rx="15" ry="20" fill="#fff" opacity="0.7"/>
+  </g>
+</svg>

@@ -1,0 +1,148 @@
+/* LAVA ESPORTS Custom Styles - Components */
+@layer components {
+
+    /* LAVA Background */
+    .lava-bg {
+        background-color: #000000;
+        /* Pure Void Black */
+        background-image: none;
+    }
+
+    /* Glass Card Effect */
+    .glass-card {
+        background: rgba(30, 30, 30, 0.85);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Gradient Text */
+    .gradient-text {
+        background: linear-gradient(135deg, #ef4444 0%, #f97316 50%, #fbbf24 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    /* Section Title */
+    .section-title {
+        font-family: 'Orbitron', 'Inter', sans-serif;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+    }
+
+    /* LAVA Divider */
+    .lava-divider {
+        height: 4px;
+        background: linear-gradient(90deg, transparent, #ef4444, #f97316, transparent);
+        border-radius: 2px;
+    }
+
+    /* Text Glow */
+    .text-glow-red {
+        text-shadow: 0 0 40px rgba(239, 68, 68, 0.5), 0 0 80px rgba(239, 68, 68, 0.3);
+    }
+
+    /* Glow Effects */
+    .glow-red {
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.4), 0 0 40px rgba(239, 68, 68, 0.2);
+    }
+
+    /* LAVA Button */
+    /* Lava Flow Animation */
+    @keyframes lava-flow {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    /* Lava Pulse Animation */
+    @keyframes lava-pulse {
+        0% {
+            box-shadow: 0 0 15px rgba(220, 38, 38, 0.5);
+            transform: scale(1);
+        }
+
+        50% {
+            box-shadow: 0 0 30px rgba(249, 115, 22, 0.8), 0 0 10px rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        100% {
+            box-shadow: 0 0 15px rgba(220, 38, 38, 0.5);
+            transform: scale(1);
+        }
+    }
+
+    .btn-lava {
+        position: relative;
+        background: linear-gradient(270deg, #dc2626, #ea580c, #b91c1c, #dc2626);
+        background-size: 300% 300%;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        z-index: 1;
+    }
+
+    .btn-lava:hover {
+        animation: lava-flow 2s ease infinite, lava-pulse 1.5s ease-in-out infinite;
+    }
+
+    /* Outline Button */
+    .btn-outline {
+        background: transparent;
+        border: 2px solid rgba(239, 68, 68, 0.5);
+        color: #fca5a5;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline:hover {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: #ef4444;
+        color: #fff;
+    }
+
+    /* Stat Card */
+    .stat-card {
+        background: rgba(30, 30, 30, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Hover Lift Effect */
+    .hover-lift {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .hover-lift:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Nav Link Hover */
+    .nav-link {
+        position: relative;
+    }
+
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #ef4444, #f97316);
+        transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after,
+    .nav-link.active::after {
+        width: 100%;
+    }
+}
