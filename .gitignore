@@ -22,3 +22,11 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Exclude Antigravity Agent configurations, temporary tools, and generated docs
+/.agent/
+*.zip
+*.exe
+*.msi
+checklist_out.txt
+checklist_output.txt
