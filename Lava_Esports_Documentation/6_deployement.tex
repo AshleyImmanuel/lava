@@ -1,0 +1,24 @@
+\chapter{DEPLOYMENT}
+\section{Folder Structure}
+A traditional Laravel project embraces the Model-View-Controller (MVC) architecture, heavily organizing backend logic from frontend assets. The folder structure is modularized to ensure maintainability over the long term.
+
+\begin{itemize}
+    \item \textbf{app/Models}: Contains Eloquent models such as User, Team, Event, Game, and RecruitmentPost.
+    \item \textbf{app/Http/Controllers}: Houses the core PHP application logic handling HTTP requests.
+    \item \textbf{resources/views}: Contains the Blade templating files (\texttt{.blade.php}) which render the user interface.
+    \item \textbf{resources/css \& resources/js}: The entry points for Vite to compile Tailwind CSS v4 and Alpine.js assets.
+    \item \textbf{routes/web.php}: Defines the routing endpoints of the web application.
+    \item \textbf{database/migrations}: Contains schema definitions for users, games, teams, events, registrations, and recruitment.
+    \item \textbf{game-server/}: Optional Node.js websocket service used for extended real-time gameplay modules.
+\end{itemize}
+
+\section{Deployment Process}
+Deployment involves taking the application from an offline local state to a live production server. The LAVA ESPORTS application process includes several optimization measures:
+\begin{enumerate}
+    \item \textbf{Environment Settings:} Modifying the \texttt{.env} file for production environments (setting \texttt{APP\_ENV=production} and \texttt{APP\_DEBUG=false}). This ensures database connections point to the live server.
+    \item \textbf{Dependency Installation:} Running \texttt{composer install --optimize-autoloader --no-dev} to load PHP dependencies efficiently.
+    \item \textbf{Database Migration:} Executing \texttt{php artisan migrate --force} on production to apply schema changes safely.
+    \item \textbf{Asset Building:} Executing \texttt{npm run build} using Vite to minify and bundle modern CSS and JavaScript into static assets.
+    \item \textbf{Caching:} Running \texttt{php artisan config:cache}, \texttt{php artisan route:cache}, and \texttt{php artisan view:cache} to improve response times.
+    \item \textbf{Post-Deployment Check:} Verifying homepage, authentication flow, event pages, team pages, and admin routes after release.
+\end{enumerate}

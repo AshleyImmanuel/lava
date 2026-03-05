@@ -10,6 +10,10 @@ class GameController extends Controller
     public function index()
     {
         $games = Game::withCount(['teams', 'events'])->get();
+        if (request()->ajax()) {
+            return view('pages.games._games_grid', compact('games'))->render();
+        }
+
         return view('pages.games.index', compact('games'));
     }
 

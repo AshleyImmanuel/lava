@@ -1,12 +1,12 @@
 <!-- Teams/Roster Preview Section -->
 <section id="teams" class="py-24 relative overflow-hidden">
     <!-- Background -->
-    <div class="absolute inset-0 bg-transparent"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-ash-950/90 to-black/80"></div>
     
     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Section Header -->
         <div class="text-center mb-16">
-            <span class="text-ember-500 font-semibold uppercase tracking-widest text-sm">Our Champions</span>
+            <span class="text-lava-400 font-semibold uppercase tracking-widest text-sm">Our Champions</span>
             <h2 class="section-title text-4xl md:text-5xl text-white mt-4 mb-6">Featured Players</h2>
             <div class="lava-divider w-24 mx-auto"></div>
         </div>

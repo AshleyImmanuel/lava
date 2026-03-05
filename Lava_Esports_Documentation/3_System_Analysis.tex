@@ -1,0 +1,82 @@
+\chapter{SYSTEM ANALYSIS }
+ 
+ \section{Module Description}
+ The LAVA ESPORTS platform is divided into multiple functional modules, each supporting navigation, data management, and role-based workflows. The main modules include:
+ \begin{itemize}
+    \item \textbf{Authentication \& Authorization Module:} Handles registration, login, email verification flow, session management, and role-aware route access.
+    \item \textbf{Team Management Module:} Provides team listing, team detail views, and application workflows for authenticated users.
+    \item \textbf{Event Tracking Module:} Supports event listing, event detail pages, and authenticated registration/unregistration.
+    \item \textbf{Recruitment Module:} Exposes public recruitment listings and recruiter-only creation of recruitment posts.
+    \item \textbf{Admin Panel Module:} Provides administrative user management and CRUD management for events and teams.
+\end{itemize}
+
+\section{Business Rules}
+Business rules are specific guidelines, conditions, or constraints that govern the operations of a system. They define how processes and activities should be conducted to ensure consistency, fairness, and alignment with business objectives.
+
+\textbf{User Management}
+\begin{itemize}
+    \item All users must authenticate before accessing personalized dashboard features.
+    \item Passwords must be securely hashed before storage in the database to ensure user privacy and protection.
+    \item Only users with administrative privileges can access the Admin Panel and alter global event or team data.
+    \item Only recruiter-role users can create recruitment posts.
+\end{itemize}
+\textbf{Team \& Event Operations}
+\begin{itemize}
+    \item Events must have a valid scheduled date before they can be published on the platform.
+    \item Authenticated users may register for events and apply to teams.
+    \item Application moderation (accept/reject) requires authenticated privileged access.
+\end{itemize}
+
+\newpage
+ \section{Analysis of Architecture}
+{\large \textbf{Laravel Framework}}
+
+Laravel is a powerful PHP framework utilized for constructing the robust backend architecture of LAVA ESPORTS. It provides a structured foundation based on the Model-View-Controller (MVC) paradigm, ensuring clean separation of concerns and maintainable code.
+\begin{enumerate}
+    \item \textbf{Routing and Controllers:}
+    \begin{itemize}
+        \item Matches incoming HTTP requests to corresponding controller actions, streamlining page navigation and API responses.
+    \end{itemize}
+    \item \textbf{Eloquent ORM:}
+    \begin{itemize}
+        \item Provides an elegant active record implementation for interacting with relational databases, simplifying queries and schema relationships.
+    \end{itemize}
+    \item \textbf{Blade Templating Engine:}
+    \begin{itemize}
+        \item Generates dynamic HTML user interfaces by combining standard HTML markup with dynamic PHP data, allowing for modular UI components like navigation bars and sidebars.
+    \end{itemize}
+\end{enumerate}
+
+\section{System Environment}
+ 
+ \subsection{Software Environment}
+ \textbf{Laravel 12 (Backend):}
+ The core server-side development of LAVA ESPORTS is built upon Laravel 12. It manages routing, user authentication, Eloquent models, and database migrations.
+ 
+ \textbf{Tailwind CSS v4 (Frontend Styling):}
+ Relied upon heavily for utility-first styling, ensuring responsive layouts, dynamic hover effects, and a highly customizable dark-mode aesthetic.
+ 
+ \textbf{Alpine.js (Frontend interactivity):}
+ Enhances the Blade templates with lightweight JavaScript behavior, handling dynamic UI states such as modals, dropdowns, and responsive sidebar toggles.
+
+ \textbf{PostgreSQL (Database):}
+ Primary target relational database for production workloads, used to store and manage user credentials, team rosters, and event data.
+ 
+ \subsection{Hardware Environment (Recommended Server Specs)}
+ \textbf{Processor (CPU):} 2+ Cores (e.g., Intel Xeon or AWS EC2 equivalent)\\
+ \textbf{Memory (RAM):} 4 GB minimum\\
+ \textbf{Storage:} 40 GB SSD\\
+ \textbf{Operating System:} Linux (Ubuntu 22.04 LTS or similar)
+
+ \newpage
+ 
+ \section{Actors and Roles}
+ The system involves three primary actors:\\\\
+ \textbf{Actor Name: User}\\
+ \textbf{Role:} General users who browse events and teams, register for events, and apply to teams.
+ 
+ \textbf{Actor Name: Administrator}\\
+ \textbf{Role:} Platform overseers equipped with complete CRUD capabilities via the Admin Panel to manage platform data securely.
+ 
+ \textbf{Actor Name: Recruiter}\\
+ \textbf{Role:} Specialized users who publish recruitment posts and scout emerging eSports talent.

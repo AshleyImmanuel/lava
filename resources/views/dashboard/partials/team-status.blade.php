@@ -25,7 +25,7 @@
             @endif
         </div>
         @if(!$activeTeam)
-        <a href="{{ route('teams.index') }}" class="px-8 py-4 rounded-xl bg-lava-600 hover:bg-lava-500 text-white font-bold uppercase tracking-widest shadow-lg shadow-lava-900/50 transition-all hover:scale-105">
+        <a href="{{ route('teams.index') }}" class="px-8 py-4 rounded-xl bg-[#e53935] hover:bg-[#f44336] text-white font-bold uppercase tracking-widest shadow-lg shadow-red-900/50 transition-all hover:scale-105">
             Find a Team
         </a>
         @else

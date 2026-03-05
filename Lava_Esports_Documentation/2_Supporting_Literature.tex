@@ -1,0 +1,13 @@
+\chapter{SUPPORTING LITERATURE}
+
+\section{Web Application Frameworks}
+Modern web platforms typically adopt an MVC architecture to separate business logic, presentation logic, and data access. Laravel provides this structure natively with routing, controllers, middleware, and Eloquent ORM, allowing rapid development while preserving maintainability \cite{laravel_docs}.
+
+\section{Frontend Styling and Interactivity}
+Utility-first CSS has become a standard choice for fast, consistent UI development. Tailwind CSS provides composable utility classes that reduce stylesheet fragmentation and improve component reuse \cite{tailwind_docs}. For lightweight interactivity in server-rendered pages, Alpine.js enables reactive UI behaviors without introducing a full SPA stack \cite{alpine_docs}.
+
+\section{Database and Data Integrity}
+Relational databases remain appropriate for transactional domains such as user accounts, event registration, and team management. PostgreSQL offers strong consistency, indexing, and constraint support that aligns well with role-based web systems \cite{postgres_docs}. In this project, data integrity is enforced through schema constraints, foreign keys, and model-level validation.
+
+\section{Authentication and Access Control}
+Secure authentication and authorization are foundational for multi-role platforms. Laravel's authentication scaffolding and middleware pipeline support role-based route protection, session handling, and CSRF protection by default \cite{laravel_auth_docs}. This forms the basis for separate user, recruiter, and administrator workflows.

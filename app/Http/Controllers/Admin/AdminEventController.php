@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\Game;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class AdminEventController extends Controller
@@ -23,52 +24,95 @@ class AdminEventController extends Controller
 
     public function store(Request $request)
     {
+        // Backward-compatibility with older form field names
+        if ($request->filled('max_teams') && ! $request->filled('max_players')) {
+            $request->merge(['max_players' => $request->input('max_teams')]);
+        }
+        if ($request->filled('banner_url') && ! $request->filled('image_path')) {
+            $request->merge(['image_path' => $request->input('banner_url')]);
+        }
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'game_id' => 'required|exists:games,id',
             'start_time' => 'required|date',
-            'location' => 'nullable|string|max:255',
-            'prize_pool' => 'nullable|string|max:255',
-            'max_teams' => 'nullable|integer|min:2',
-            'type' => 'required|in:online,offline',
-            'status' => 'required|in:upcoming,live,completed',
-            'banner_url' => 'nullable|url',
+            'max_players' => 'nullable|integer|min:2',
+            'entry_fee' => 'nullable|integer|min:0',
+            'prize_pool' => 'nullable|integer|min:0',
+            'type' => 'required|in:tryout,scrim,friendly,tournament',
+            'status' => 'required|in:upcoming,ongoing,completed,cancelled',
+            'image_path' => 'nullable|url',
         ]);
+
+        $validated['entry_fee'] = $validated['entry_fee'] ?? 0;
+        $validated['prize_pool'] = $validated['prize_pool'] ?? 0;
 
         Event::create($validated);
 
         return redirect()->route('admin.events.index')->with('success', 'Event created successfully.');
     }
 
-    public function edit(Event $event)
+    public function edit(int $event)
     {
+        $event = Event::find($event);
+        if (! $event) {
+            return redirect()
+                ->route('admin.events.index')
+                ->with('error', 'Event not found. It may have been deleted.');
+        }
+
         $games = Game::all();
         return view('admin.events.edit', compact('event', 'games'));
     }
 
-    public function update(Request $request, Event $event)
+    public function update(Request $request, int $event)
     {
+        $event = Event::find($event);
+        if (! $event) {
+            return redirect()
+                ->route('admin.events.index')
+                ->with('error', 'Event not found. It may have been deleted.');
+        }
+
+        // Backward-compatibility with older form field names
+        if ($request->filled('max_teams') && ! $request->filled('max_players')) {
+            $request->merge(['max_players' => $request->input('max_teams')]);
+        }
+        if ($request->filled('banner_url') && ! $request->filled('image_path')) {
+            $request->merge(['image_path' => $request->input('banner_url')]);
+        }
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'game_id' => 'required|exists:games,id',
             'start_time' => 'required|date',
-            'location' => 'nullable|string|max:255',
-            'prize_pool' => 'nullable|string|max:255',
-            'max_teams' => 'nullable|integer|min:2',
-            'type' => 'required|in:online,offline',
-            'status' => 'required|in:upcoming,live,completed',
-            'banner_url' => 'nullable|url',
+            'max_players' => 'nullable|integer|min:2',
+            'entry_fee' => 'nullable|integer|min:0',
+            'prize_pool' => 'nullable|integer|min:0',
+            'type' => 'required|in:tryout,scrim,friendly,tournament',
+            'status' => 'required|in:upcoming,ongoing,completed,cancelled',
+            'image_path' => 'nullable|url',
         ]);
+
+        $validated['entry_fee'] = $validated['entry_fee'] ?? 0;
+        $validated['prize_pool'] = $validated['prize_pool'] ?? 0;
 
         $event->update($validated);
 
         return redirect()->route('admin.events.index')->with('success', 'Event updated successfully.');
     }
 
-    public function destroy(Event $event)
+    public function destroy(int $event): RedirectResponse
     {
+        $event = Event::find($event);
+        if (! $event) {
+            return redirect()
+                ->route('admin.events.index')
+                ->with('error', 'Event not found. It may have been deleted.');
+        }
+
         $event->delete();
         return redirect()->route('admin.events.index')->with('success', 'Event deleted successfully.');
     }

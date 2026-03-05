@@ -27,11 +27,12 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-xs text-gray-400 uppercase tracking-widest mb-2">Game</label>
-                            <select name="game_id" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-lava-500 focus:ring-1 focus:ring-lava-500 transition-colors">
-                                @foreach($games as $game)
-                                    <option value="{{ $game->id }}">{{ $game->name }}</option>
-                                @endforeach
-                            </select>
+                            <x-select
+                                name="game_id"
+                                :options="$games->pluck('name', 'id')->toArray()"
+                                :value="old('game_id', $games->first()?->id)"
+                                placeholder="Select game"
+                            />
                         </div>
                         <div>
                             <label class="block text-xs text-gray-400 uppercase tracking-widest mb-2">Region</label>
@@ -48,7 +49,7 @@
                     <!-- Logo URL -->
                     <div>
                         <label class="block text-xs text-gray-400 uppercase tracking-widest mb-2">Logo URL</label>
-                        <input type="url" name="logo_url" placeholder="https://..." class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:border-lava-500 focus:ring-1 focus:ring-lava-500 transition-colors">
+                        <input type="url" name="logo_url" value="{{ old('logo_url') ?: 'https://placehold.co/512x512/111827/f9fafb?text=Team%20Logo' }}" placeholder="https://..." class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:border-lava-500 focus:ring-1 focus:ring-lava-500 transition-colors">
                     </div>
 
                     <div class="pt-4 flex justify-end">

@@ -28,7 +28,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="{{ route('events.show', $event) }}" class="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-bold text-white uppercase tracking-wider transition-colors">View</a>
+                <a href="{{ route('events.show', $event) }}" class="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-300" style="background: linear-gradient(135deg, #1a0a0a 0%, #2d1a1a 100%); color: #f44336; border: 1px solid #f44336; box-shadow: 0 0 10px rgba(244, 67, 54, 0.3);" onmouseover="this.style.background='linear-gradient(135deg, #f44336 0%, #e53935 100%)'; this.style.color='#ffffff'; this.style.boxShadow='0 0 20px rgba(244, 67, 54, 0.5)';" onmouseout="this.style.background='linear-gradient(135deg, #1a0a0a 0%, #2d1a1a 100%)'; this.style.color='#f44336'; this.style.boxShadow='0 0 10px rgba(244, 67, 54, 0.3)';">View</a>
             </div>
         @empty
             <!-- Empty State (Only if absolutely no events exist in DB) -->

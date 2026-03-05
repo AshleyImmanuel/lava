@@ -17,6 +17,10 @@ class EventController extends Controller
             ->latest('start_time')
             ->paginate(12);
         
+        if ($request->ajax()) {
+            return view('pages.events._events_grid', compact('events'))->render();
+        }
+        
         return view('pages.events.index', compact('events'));
     }
 
