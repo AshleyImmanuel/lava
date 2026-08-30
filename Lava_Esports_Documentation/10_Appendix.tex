@@ -1,0 +1,34 @@
+\chapter{APPENDIX}
+
+\section{Software Requirements}
+\textbf{Operating System}: Windows 10/11, Ubuntu 22.04+, or macOS 13+\\
+\textbf{PHP}: 8.2 or above\\
+\textbf{Composer}: 2.x\\
+\textbf{Node.js}: 20.x or above\\
+\textbf{NPM}: 10.x or above\\
+\textbf{Database}: PostgreSQL 14+ (primary target)\\
+\textbf{Optional for local tests}: SQLite
+
+\section{Hardware Requirements}
+\textbf{Processor}: Dual-core CPU or better\\
+\textbf{RAM}: 8 GB minimum (16 GB recommended for local development)\\
+\textbf{Storage}: 2 GB free for source, dependencies, and build artifacts\\
+\textbf{Network}: Internet access for dependency installation and OAuth integrations
+
+\section{Environment Configuration Checklist}
+\begin{itemize}
+    \item Configure \texttt{.env} with application URL and database credentials.
+    \item Generate app key using \texttt{php artisan key:generate}.
+    \item Run migrations using \texttt{php artisan migrate}.
+    \item Build frontend assets using \texttt{npm run build} (or \texttt{npm run dev} for development).
+\end{itemize}
+
+\section{Useful Commands}
+\begin{verbatim}
+composer install
+npm install
+php artisan migrate
+php artisan serve
+npm run dev
+php artisan test
+\end{verbatim}

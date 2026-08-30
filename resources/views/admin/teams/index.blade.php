@@ -11,7 +11,7 @@
             <h1 class="text-3xl font-black text-white font-[Orbitron]">Admin Dashboard</h1>
             <div class="flex gap-4">
                 <a href="{{ route('dashboard') }}" class="px-4 py-2 text-gray-400 hover:text-white transition-colors text-sm font-bold uppercase tracking-widest">Back to Player Dashboard</a>
-                <a href="{{ route('admin.teams.create') }}" class="px-6 py-2 rounded-xl bg-lava-600 hover:bg-lava-500 text-white font-bold uppercase tracking-widest text-sm shadow-lg shadow-lava-900/50 transition-all hover:scale-105">
+                <a href="{{ route('admin.teams.create') }}" class="inline-flex items-center px-6 py-2 rounded-xl bg-red-600 hover:bg-red-500 border border-red-400/60 text-white font-bold uppercase tracking-widest text-sm shadow-lg shadow-red-900/50 transition-all hover:scale-105">
                     Create Team
                 </a>
             </div>
@@ -63,10 +63,10 @@
                                     <a href="{{ route('admin.teams.edit', $team) }}" class="text-gray-400 hover:text-white transition-colors">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                     </a>
-                                    <form action="{{ route('admin.teams.destroy', $team) }}" method="POST" onsubmit="return confirm('Are you sure?');">
+                                    <form id="delete-team-{{ $team->id }}" action="{{ route('admin.teams.destroy', $team) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-gray-400 hover:text-red-500 transition-colors">
+                                        <button type="button" @click="$dispatch('open-confirmation-modal', { title: 'Delete Team', message: 'Are you sure you want to delete {{ $team->name }}? This action cannot be undone.', action: 'delete-team-{{ $team->id }}' })" class="text-gray-400 hover:text-red-500 transition-colors">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                         </button>
                                     </form>

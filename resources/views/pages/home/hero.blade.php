@@ -2,8 +2,8 @@
 <section class="relative min-h-screen flex items-center justify-center bg-transparent overflow-hidden">
     <!-- Animated Background Elements - Performance Optimized -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none" style="contain: strict;">
-        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-lava-500/15 rounded-full blur-2xl opacity-50"></div>
-        <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-ember-500/15 rounded-full blur-2xl opacity-50"></div>
+        <div class="absolute top-1/4 left-1/4 w-80 h-80 bg-lava-500/10 rounded-full blur-xl opacity-40"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-72 h-72 bg-ember-500/10 rounded-full blur-xl opacity-40"></div>
     </div>
 
     <!-- Grid Pattern Overlay -->
@@ -52,8 +52,8 @@
         <!-- Stats Preview -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto stagger-children">
             <div class="stat-card rounded-2xl p-6 hover-lift border border-orange-500/30 bg-black/60">
-                <div class="text-4xl md:text-5xl font-bold font-[Orbitron] text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500 mb-2 counter" data-target="{{ $stats['players'] ?? 0 }}">0</div>
-                <div class="text-gray-300 text-sm uppercase tracking-wider">Pro Players</div>
+                <div class="text-4xl md:text-5xl font-bold font-[Orbitron] text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500 mb-2 counter" data-target="{{ $stats['teams'] ?? 0 }}">0</div>
+                <div class="text-gray-300 text-sm uppercase tracking-wider">Our Teams</div>
             </div>
             <div class="stat-card rounded-2xl p-6 hover-lift border border-orange-500/30 bg-black/60">
                 <div class="text-4xl md:text-5xl font-bold font-[Orbitron] text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500 mb-2 counter" data-target="{{ $stats['tournaments'] ?? 0 }}">0</div>
@@ -64,16 +64,10 @@
                 <div class="text-gray-300 text-sm uppercase tracking-wider">Game Titles</div>
             </div>
             <div class="stat-card rounded-2xl p-6 hover-lift border border-orange-500/30 bg-black/60">
-                <div class="text-4xl md:text-5xl font-bold font-[Orbitron] text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500 mb-2 counter" data-target="{{ $stats['community'] ?? 0 }}">0</div>
-                <div class="text-gray-300 text-sm uppercase tracking-wider">Community</div>
+                <div class="text-4xl md:text-5xl font-bold font-[Orbitron] text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500 mb-2 counter" data-target="{{ $stats['members'] ?? 0 }}">0</div>
+                <div class="text-gray-300 text-sm uppercase tracking-wider">Members</div>
             </div>
         </div>
     </div>
 
-    <!-- Scroll Indicator -->
-    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce opacity-70">
-        <svg class="w-6 h-6 text-ash-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-        </svg>
-    </div>
 </section>

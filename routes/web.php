@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\HomeController as AdminController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 
 // ... (imports are fine)
@@ -24,6 +25,22 @@ Route::get('/about', function () {
 Route::get('/contact', function () {
     return view('pages.contact');
 })->name('contact');
+Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
+
+// Legal Pages
+Route::get('/privacy-policy', function () {
+    return view('pages.privacy-policy');
+})->name('privacy');
+
+Route::get('/terms', function () {
+    return view('pages.terms-of-service');
+})->name('terms');
+Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
+
+// Mini Games Page
+Route::get('/mini-games', function () {
+    return view('pages.mini-games');
+})->name('mini-games');
 
 // Games
 Route::get('/games', [GameController::class, 'index'])->name('games.index');
@@ -56,15 +73,30 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/users/{user}/promote', [App\Http\Controllers\Admin\AdminController::class, 'promote'])->name('users.promote');
         Route::post('/users/{user}/demote', [App\Http\Controllers\Admin\AdminController::class, 'demote'])->name('users.demote');
 
-        Route::resource('events', App\Http\Controllers\Admin\AdminEventController::class);
-        Route::resource('teams', App\Http\Controllers\Admin\AdminTeamController::class);
+        Route::resource('events', App\Http\Controllers\Admin\AdminEventController::class)->except(['show']);
+        Route::resource('teams', App\Http\Controllers\Admin\AdminTeamController::class)->except(['show']);
     });
-
-    // Recruiter Invitations
-    Route::get('/invitations', [App\Http\Controllers\InvitationController::class, 'index'])->name('invitations.index');
-    Route::post('/invitations', [App\Http\Controllers\InvitationController::class, 'store'])->name('invitations.store');
 
 });
 
-require __DIR__.'/auth.php';
+// Recruitment Posts (Public)
+Route::get('/recruitment', [App\Http\Controllers\RecruitmentPostController::class, 'index'])->name('recruitment.index');
+Route::get('/recruitment/{post}', [App\Http\Controllers\RecruitmentPostController::class, 'show'])->name('recruitment.show');
 
+// Recruitment Posts (Recruiter Only)
+Route::middleware('auth')->group(function () {
+    Route::get('/recruitment-create', function () {
+        return redirect()->route('dashboard', ['tab' => 'recruitment']);
+    })->name('recruitment.create');
+    Route::post('/recruitment', [App\Http\Controllers\RecruitmentPostController::class, 'store'])->name('recruitment.store');
+    
+    // Application Management
+    Route::post('/recruitment/applications/{application}/approve', [App\Http\Controllers\RecruitmentApplicationController::class, 'approve'])->name('recruitment.applications.approve');
+    Route::post('/recruitment/applications/{application}/reject', [App\Http\Controllers\RecruitmentApplicationController::class, 'reject'])->name('recruitment.applications.reject');
+    Route::delete('/recruitment/applications/{application}/kick', [App\Http\Controllers\RecruitmentApplicationController::class, 'kick'])->name('recruitment.applications.kick');
+});
+
+// Recruitment Post - Apply (Must be logged in)
+Route::post('/recruitment/{post}/apply', [App\Http\Controllers\RecruitmentApplicationController::class, 'apply'])->middleware('auth')->name('recruitment.apply');
+
+require __DIR__.'/auth.php';

@@ -1,8 +1,8 @@
 <!-- Games Section - Split Layout with Scroll Triggers -->
 <section id="games" class="py-24 bg-transparent relative overflow-hidden">
-    <!-- Background accent -->\r
-    <div class="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-lava-950/30 to-transparent pointer-events-none"></div>\r
-    <div class="absolute bottom-0 right-0 w-96 h-96 bg-lava-600/10 rounded-full blur-2xl pointer-events-none"></div>
+    <!-- Background accent -->
+    <div class="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-lava-950/20 to-transparent pointer-events-none"></div>
+    <div class="absolute bottom-0 right-0 w-80 h-80 bg-lava-600/10 rounded-full blur-lg pointer-events-none"></div>
     
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <!-- Section Header with Split Reveal -->
@@ -68,26 +68,33 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const cards = document.querySelectorAll('.tilt-card');
+            let ticking = false;
             
             cards.forEach(card => {
+                let currentX = 0, currentY = 0;
+                
                 card.addEventListener('mousemove', (e) => {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
+                    if (ticking) return;
+                    ticking = true;
                     
-                    const centerX = rect.width / 2;
-                    const centerY = rect.height / 2;
-                    
-                    const rotateX = ((y - centerY) / centerY) * -10; // Max rotation deg
-                    const rotateY = ((x - centerX) / centerX) * 10;
-                    
-                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
-                    card.style.transition = 'transform 0.1s ease'; // Quick follow
+                    requestAnimationFrame(() => {
+                        const rect = card.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        const rotateX = ((y - rect.height/2) / (rect.height/2)) * -8;
+                        const rotateY = ((x - rect.width/2) / (rect.width/2)) * 8;
+                        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02,1.02,1.02)`;
+                        ticking = false;
+                    });
                 });
                 
                 card.addEventListener('mouseleave', () => {
-                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
-                    card.style.transition = 'transform 0.5s ease'; // Smooth return
+                    card.style.transition = 'transform 0.4s ease';
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1,1,1)';
+                });
+                
+                card.addEventListener('mouseenter', () => {
+                    card.style.transition = 'none';
                 });
             });
         });

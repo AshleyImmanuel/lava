@@ -1,0 +1,55 @@
+\chapter{TESTING}
+Testing validates correctness, security, and stability for the LAVA ESPORTS platform. This chapter reflects the current repository state, including the latest automated test execution.
+
+\section{Automated Test Execution}
+\textbf{Command used:}
+\begin{verbatim}
+php artisan test
+\end{verbatim}
+
+\textbf{Execution date:} 02 March 2026
+
+\begin{table}[htbp]
+    \centering
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{Suite} & \textbf{Passed} & \textbf{Failed} & \textbf{Status} \\
+        \hline
+        Unit & 1 & 0 & Pass \\
+        \hline
+        Feature & 0 & 24 & Fail \\
+        \hline
+        Total & 1 & 24 & Fail \\
+        \hline
+    \end{tabular}
+    \caption{Current Automated Test Summary}
+    \label{tab:test_summary}
+\end{table}
+
+\section{Observed Failure Pattern}
+The dominant failures are migration-time database errors in SQLite test runs. A migration currently executes raw SQL statements intended for PostgreSQL check constraints:
+\begin{verbatim}
+ALTER TABLE users DROP CONSTRAINT IF EXISTS users_role_check
+\end{verbatim}
+SQLite does not support this syntax, so feature tests fail before request-level assertions can complete.
+
+\section{Corrective Actions}
+\begin{itemize}
+    \item Refactor constraint migrations to be database-driver aware (PostgreSQL vs SQLite).
+    \item Add CI test matrix (at least PostgreSQL and SQLite) to detect portability regressions early.
+    \item Extend feature coverage for event registration, team applications, and recruiter post creation after migration portability is fixed.
+\end{itemize}
+
+\section{Manual Functional Verification (Recommended)}
+After fixing migration portability, rerun:
+\begin{verbatim}
+php artisan test
+\end{verbatim}
+and manually validate these user journeys:
+\begin{itemize}
+    \item User registration/login/logout
+    \item Event registration and unregister flow
+    \item Team application and admin moderation
+    \item Recruiter post creation and listing
+\end{itemize}

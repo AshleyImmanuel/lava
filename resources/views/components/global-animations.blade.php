@@ -2,7 +2,13 @@
     /* ===== MAIN CONTENT TRANSITIONS ===== */
     .main-wrap { opacity: 0; }
     .main-wrap.show { animation: mainIn 0.5s ease-out forwards; }
+    .main-wrap.no-intro { opacity: 1; } /* Show immediately when no intro */
     @keyframes mainIn { to { opacity: 1; } }
+    
+    @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
 
     /* Nav items */
     .nav-item { opacity: 0; transform: translateY(-20px); }
@@ -10,8 +16,8 @@
     @keyframes navDrop { to { opacity: 1; transform: translateY(0); } }
 
     /* Landing page elements - triggered after intro */
-    .reveal { opacity: 0; transform: translateY(40px); }
-    .reveal.show { animation: revealUp 0.7s ease-out forwards; }
+    .reveal { opacity: 0; transform: translateY(30px); }
+    .reveal.show { animation: revealUp 0.5s ease-out forwards; }
     @keyframes revealUp { to { opacity: 1; transform: translateY(0); } }
 
     .reveal-scale { opacity: 0; transform: scale(0.9); }
@@ -65,20 +71,17 @@
     .split-reveal.show span { animation: splitUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     @keyframes splitUp { to { transform: translateY(0); } }
 
-    /* Enhanced Pixelate formation */
+    /* Optimized Pixelate - simplified for performance */
     .pixelate { 
         opacity: 0; 
-        transform: scale(0.95);
+        transform: scale(0.98);
     }
     .pixelate.show { 
-        animation: pixelEffect 0.6s steps(10) forwards; 
+        animation: pixelEffect 0.4s ease-out forwards; 
     }
     @keyframes pixelEffect {
-        0% { opacity: 0; mask-image: repeating-linear-gradient(45deg, #000 0px, #000 2px, transparent 2px, transparent 8px); transform: scale(1.1); filter: grayscale(1); }
-        20% { opacity: 0.5; mask-image: repeating-linear-gradient(45deg, #000 0px, #000 4px, transparent 4px, transparent 8px); }
-        40% { opacity: 0.8; mask-image: repeating-linear-gradient(45deg, #000 0px, #000 10px, transparent 10px, transparent 12px); transform: scale(1.02); }
-        60% { mask-image: none; filter: grayscale(0.5); }
-        100% { opacity: 1; transform: scale(1); filter: grayscale(0); mask-image: none; }
+        0% { opacity: 0; transform: scale(0.98); }
+        100% { opacity: 1; transform: scale(1); }
     }
 
     /* Stagger children */
@@ -110,40 +113,42 @@
         // ===== SCROLL TRIGGER ANIMATIONS =====
         const scrollElements = document.querySelectorAll('.slide-left, .slide-right, .slide-up, .split-reveal, .pixelate, .stagger-children, .glow-on-scroll, .line-grow, .tilt-card');
         
-        const observer = new IntersectionObserver((entries) => {
+        const observer = new IntersectionObserver((entries, obs) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('show');
-                    // Optional: unobserve after triggering
-                    // observer.unobserve(entry.target);
+                    obs.unobserve(entry.target); // Unobserve after triggering for performance
                 }
             });
-        }, { threshold: 0.2, rootMargin: '0px 0px -50px 0px' });
+        }, { threshold: 0.15, rootMargin: '0px 0px -30px 0px' });
 
         scrollElements.forEach(el => observer.observe(el));
 
-        // Counter animation for stats
+        // Optimized counter animation - fewer frames, eased timing
         const counters = document.querySelectorAll('.counter');
-        counters.forEach(counter => {
-            const target = parseInt(counter.dataset.target) || 0;
-            const duration = 2000;
-            const start = performance.now();
-            
-            const updateCounter = (timestamp) => {
-                const progress = Math.min((timestamp - start) / duration, 1);
-                counter.textContent = Math.floor(progress * target);
-                if (progress < 1) requestAnimationFrame(updateCounter);
-                else counter.textContent = counter.dataset.suffix ? target + counter.dataset.suffix : target;
-            };
-            
-            const counterObserver = new IntersectionObserver((entries) => {
-                if (entries[0].isIntersecting) {
-                    requestAnimationFrame(updateCounter);
-                    counterObserver.disconnect();
+        const easeOut = t => 1 - Math.pow(1 - t, 3); // Cubic ease-out
+        
+        const counterObserver = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counter = entry.target;
+                    const target = parseInt(counter.dataset.target) || 0;
+                    const suffix = counter.dataset.suffix || '';
+                    const duration = 1500; // Faster animation
+                    let start = null;
+                    
+                    const animate = (time) => {
+                        if (!start) start = time;
+                        const progress = Math.min((time - start) / duration, 1);
+                        counter.textContent = Math.floor(easeOut(progress) * target) + (progress === 1 ? suffix : '');
+                        if (progress < 1) requestAnimationFrame(animate);
+                    };
+                    requestAnimationFrame(animate);
+                    obs.unobserve(counter);
                 }
-            }, { threshold: 0.5 });
-            
-            counterObserver.observe(counter);
-        });
+            });
+        }, { threshold: 0.5 });
+        
+        counters.forEach(c => counterObserver.observe(c));
     });
 </script>

@@ -20,6 +20,10 @@ class TeamController extends Controller
         
         $games = Game::whereIn('name', ['VALORANT', 'Counter-Strike 2', 'Free Fire'])->get();
         
+        if ($request->ajax()) {
+            return view('pages.teams._teams_grid', compact('teams', 'games'))->render();
+        }
+
         return view('pages.teams.index', compact('teams', 'games'));
     }
 

@@ -1,59 +1,89 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# LAVA ESPORTS
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+LAVA ESPORTS is a Laravel 12 platform for esports community management with:
+- public game/event/team discovery
+- authenticated user dashboards
+- team applications and event registrations
+- recruiter posts for talent scouting
+- admin management for users, events, and teams
 
-## About Laravel
+## Tech Stack
+- Backend: Laravel 12, PHP 8.2+
+- Frontend: Blade, Tailwind CSS v4, Alpine.js, Vite
+- Database: PostgreSQL (primary)
+- Optional realtime service: Node.js `game-server` (Express + Socket.IO)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Project Structure
+- `app/` application logic (controllers, models, middleware)
+- `routes/web.php` main web routes
+- `resources/views` Blade templates
+- `database/migrations` schema and data migrations
+- `game-server/` optional Node.js server
+- `Lava_Esports_Documentation/` report sources and diagrams
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Local Setup
+1. Install dependencies:
+   ```bash
+   composer install
+   npm install
+   ```
+2. Create environment file:
+   ```bash
+   cp .env.example .env
+   ```
+   On Windows PowerShell:
+   ```powershell
+   Copy-Item .env.example .env
+   ```
+3. Generate app key:
+   ```bash
+   php artisan key:generate
+   ```
+4. Configure `.env` for PostgreSQL.
+5. Run migrations:
+   ```bash
+   php artisan migrate
+   ```
+6. Start development services:
+   ```bash
+   composer run dev
+   ```
+   This runs Laravel server, queue listener, and Vite.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Build for Production
+```bash
+composer install --optimize-autoloader --no-dev
+npm ci
+npm run build
+php artisan migrate --force
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
 
-## Learning Laravel
+## Optional Game Server
+```bash
+cd game-server
+npm install
+node index.js
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Testing
+Run:
+```bash
+php artisan test
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Current known issue:
+- Feature tests fail on SQLite because one migration uses PostgreSQL-specific `ALTER TABLE ... DROP CONSTRAINT` SQL.
+- Refactor migration `2026_01_26_113132_modify_role_enum_in_users_table.php` for database portability to fix local test suite reliability.
 
-## Laravel Sponsors
+## Documentation
+Detailed report source is in:
+- `Lava_Esports_Documentation/main.tex`
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Main diagrams currently used in the report:
+- In-source TikZ diagrams in `Lava_Esports_Documentation/4_System_Design.tex`:
+  - Use case model
+  - Authentication and role routing flow
+  - System architecture

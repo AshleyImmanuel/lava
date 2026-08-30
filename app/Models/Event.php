@@ -15,6 +15,8 @@ class Event extends Model
         'game_id',
         'start_time',
         'max_players',
+        'entry_fee',
+        'prize_pool',
         'description',
         'status',
         'image_path',
@@ -22,6 +24,8 @@ class Event extends Model
 
     protected $casts = [
         'start_time' => 'datetime',
+        'entry_fee' => 'integer',
+        'prize_pool' => 'integer',
     ];
 
     public function game(): BelongsTo

@@ -1,0 +1,351 @@
+@extends('layouts.app')
+
+@section('title', $team->name . ' - LAVA ESPORTS')
+
+@php
+    $colors = [
+        'lava' => '#f44336',
+        'ember' => '#ff9800',
+        'red' => '#ef4444',
+        'orange' => '#f97316',
+        'green' => '#22c55e',
+        'blue' => '#3b82f6',
+        'purple' => '#a855f7',
+        'pink' => '#ec4899',
+        'cyan' => '#06b6d4',
+    ];
+    $baseColor = $team->game->color ?? 'lava';
+    $themeColor = $colors[$baseColor] ?? '#f44336';
+    $themeColorDark = '#' . dechex(max(0, hexdec(substr($themeColor, 1)) - 0x222222));
+@endphp
+
+@section('content')
+<div class="relative min-h-screen pt-24 pb-24 overflow-hidden selection:text-white" style="--theme: {{ $themeColor }}; selection-background-color: {{ $themeColor }}40;">
+    <!-- CSS3 Mesh Background -->
+    <div class="fixed inset-0 pointer-events-none z-0">
+        <div class="absolute inset-0 bg-[#050505]"></div>
+        
+        <!-- Animated Gradients -->
+        <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full blur-[120px] animate-pulse-slow opacity-20" style="background-color: {{ $themeColor }}"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-900/20 rounded-full blur-[120px] animate-pulse-slow options-delay-1000"></div>
+        
+        <!-- Grid Pattern -->
+        <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)]"></div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Back Button -->
+        <a href="{{ route('teams.index') }}" class="inline-flex items-center gap-2 px-4 py-2 mt-6 rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:border-white/20 transition-all group">
+            <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            <span class="font-medium text-sm">Back to Teams</span>
+        </a>
+
+        <!-- Team Hero -->
+        <div class="flex flex-col md:flex-row items-center gap-8 mb-12 pt-8">
+            <!-- Logo with Glow -->
+            <div class="relative w-48 h-48 md:w-64 md:h-64 flex-shrink-0 group">
+                <div class="absolute inset-0 rounded-full blur-2xl opacity-40 group-hover:opacity-60 transition duration-500 animate-pulse-slow" style="background-color: {{ $themeColor }}"></div>
+                <div class="relative w-full h-full rounded-full bg-black border border-white/10 flex items-center justify-center overflow-hidden" style="box-shadow: 0 0 20px {{ $themeColor }}20;">
+                    @if($team->logo_url)
+                        <img src="{{ $team->logo_url }}" class="w-full h-full object-cover">
+                    @else
+                        <span class="text-7xl font-black text-white font-[Orbitron]" style="text-shadow: 0 0 20px {{ $themeColor }}">{{ substr($team->name, 0, 1) }}</span>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Team Info & Stats -->
+            <div class="flex-1 text-center md:text-left">
+                <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/10 bg-black/40 backdrop-blur mb-6">
+                    <span class="w-2 h-2 rounded-full animate-pulse" style="background-color: {{ $themeColor }}"></span>
+                    <span class="font-[Orbitron] text-xs font-bold tracking-[0.2em] text-gray-300 uppercase">{{ $team->game->name ?? 'Esports' }} Division</span>
+                </div>
+
+                <h1 class="text-4xl md:text-6xl font-black text-white font-[Orbitron] uppercase tracking-tighter mb-4 drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+                    {{ $team->name }}
+                </h1>
+                
+                <p class="text-lg text-gray-400 font-light max-w-2xl leading-relaxed mb-6">
+                    @if($team->members->count() > 0)
+                        <span class="text-white font-medium">{{ $team->members->count() }} Active Players</span> ready for battle
+                    @else
+                        Building our roster — join the team!
+                    @endif
+                </p>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+                    @auth
+                        @if(auth()->user()->teams->contains($team))
+                            <div class="px-6 py-3 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-green-500"></span> Member
+                            </div>
+                        @elseif($team->applications()->where('user_id', auth()->id())->where('status', 'pending')->exists())
+                            <div class="px-6 py-3 rounded-xl bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 font-bold uppercase tracking-widest flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                Application Pending
+                            </div>
+                        @elseif(!auth()->user()->teams()->exists())
+                             <div x-data="{ open: false }">
+                                <button @click="open = true" class="px-8 py-3 rounded-xl font-bold text-white uppercase tracking-widest transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]" style="background-color: {{ $themeColor }}; box-shadow: 0 4px 15px {{ $themeColor }}40;">
+                                    Apply to Join
+                                </button>
+                                <!-- Modal -->
+                                <div x-show="open" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
+                                    <div class="flex min-h-screen items-center justify-center p-4 text-center">
+                                        <div @click="open = false" class="fixed inset-0 bg-black/90 backdrop-blur-sm transition-opacity"></div>
+                                        <div class="relative bg-zinc-900 border border-white/10 rounded-2xl p-8 max-w-lg w-full text-left shadow-2xl overflow-hidden">
+                                            <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-{{ $themeColor }} to-transparent"></div>
+                                            <h3 class="text-2xl font-black text-white font-[Orbitron] mb-6">Join Roster</h3>
+                                            
+                                            <form action="{{ route('teams.apply', $team) }}" method="POST" class="space-y-4">
+                                                @csrf
+                                                <div class="grid grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label class="text-xs text-gray-400 uppercase font-bold mb-1 block">IGN</label>
+                                                        <input type="text" name="ingame_name" required class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-{{ $themeColor }} focus:ring-1 focus:ring-{{ $themeColor }} outline-none transition-colors">
+                                                    </div>
+                                                    <div>
+                                                        <label class="text-xs text-gray-400 uppercase font-bold mb-1 block">Wait ID / UID</label>
+                                                        <input type="text" name="ingame_id" required class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-{{ $themeColor }} focus:ring-1 focus:ring-{{ $themeColor }} outline-none transition-colors">
+                                                    </div>
+                                                </div>
+                                                <div class="grid grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label class="text-xs text-gray-400 uppercase font-bold mb-1 block">Rank</label>
+                                                        <input type="text" name="ingame_level" required class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-{{ $themeColor }} focus:ring-1 focus:ring-{{ $themeColor }} outline-none transition-colors">
+                                                    </div>
+                                                    <div>
+                                                        <label class="text-xs text-gray-400 uppercase font-bold mb-1 block">Phone</label>
+                                                        <input type="tel" name="phone_number" required class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-{{ $themeColor }} focus:ring-1 focus:ring-{{ $themeColor }} outline-none transition-colors">
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label class="text-xs text-gray-400 uppercase font-bold mb-1 block">Experience</label>
+                                                    <textarea name="experience" rows="3" required class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-{{ $themeColor }} focus:ring-1 focus:ring-{{ $themeColor }} outline-none transition-colors"></textarea>
+                                                </div>
+                                                <input type="hidden" name="personal_email" value="{{ auth()->user()->email }}">
+                                                
+                                                <div class="flex justify-end gap-3 pt-4">
+                                                    <button type="button" @click="open = false" class="px-4 py-2 rounded-lg text-gray-400 hover:text-white font-bold uppercase text-xs">Cancel</button>
+                                                    <button type="submit" class="px-6 py-2 rounded-lg text-white font-bold uppercase text-xs transition-colors" style="background-color: {{ $themeColor }}">Submit</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @endauth
+
+                    <div class="flex items-center gap-4 px-6 py-3 rounded-xl bg-white/5 border border-white/10">
+                        <div class="text-right">
+                            <span class="block text-2xl font-black text-white leading-none">{{ $team->wonMatches->count() }}</span>
+                            <span class="text-[10px] text-gray-500 uppercase font-bold">Wins</span>
+                        </div>
+                        <div class="w-px h-8 bg-white/10"></div>
+                        <div class="text-right">
+                            <span class="block text-2xl font-black text-white leading-none">{{ $team->members->count() }}</span>
+                            <span class="text-[10px] text-gray-500 uppercase font-bold">Players</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20">
+             <!-- Left Column: Upcoming Events & Matches (8 cols) -->
+             <div class="lg:col-span-8 space-y-12">
+                
+                <!-- Upcoming Events -->
+                @if($upcomingEvents->count() > 0)
+                <div>
+                    <div class="flex items-center gap-4 mb-8">
+                        <span class="text-5xl font-black text-white/10 font-[Orbitron]">01</span>
+                        <div>
+                            <h2 class="text-3xl font-bold text-white font-[Orbitron]">Upcoming Events</h2>
+                            <div class="h-0.5 w-12 mt-2" style="background-color: {{ $themeColor }}"></div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        @foreach($upcomingEvents as $event)
+                        <div class="group relative">
+                            <div class="absolute -inset-0.5 rounded-xl blur opacity-0 group-hover:opacity-60 transition duration-500" style="background: linear-gradient(135deg, {{ $themeColor }}, transparent);"></div>
+                            <div class="relative bg-zinc-900/80 backdrop-blur border border-white/10 rounded-xl p-6 hover:bg-black/60 transition-all flex flex-col h-full">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div class="px-2 py-1 bg-white/5 rounded text-[10px] font-bold uppercase tracking-wider text-white border border-white/10">
+                                        {{ $event->start_time->format('M d, Y') }}
+                                    </div>
+                                    <span class="w-2 h-2 rounded-full animate-pulse" style="background-color: {{ $themeColor }}"></span>
+                                </div>
+                                
+                                <h3 class="text-xl font-bold text-white font-[Orbitron] mb-2 leading-tight">{{ $event->title }}</h3>
+                                <p class="text-sm text-gray-400 mb-6 flex-grow">{{ Str::limit($event->description, 60) }}</p>
+                                
+                                <div class="flex items-center justify-between pt-4 border-t border-white/5">
+                                    <div class="text-xs font-bold text-gray-500 uppercase">Prize: <span class="text-white">{{ $event->prize_pool ?? 'TBA' }}</span></div>
+                                    <a href="{{ route('events.show', $event) }}" class="text-xs font-bold uppercase hover:text-white transition-colors" style="color: {{ $themeColor }}">View Event &rarr;</a>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+
+                <!-- Recent Victories -->
+                @if($pastMatches->count() > 0)
+                <div>
+                     <div class="flex items-center gap-4 mb-8">
+                        <span class="text-5xl font-black text-white/10 font-[Orbitron]">{{ $upcomingEvents->count() > 0 ? '02' : '01' }}</span>
+                        <div>
+                            <h2 class="text-3xl font-bold text-white font-[Orbitron]">Recent Victories</h2>
+                            <div class="h-0.5 w-12 mt-2" style="background-color: {{ $themeColor }}"></div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        @foreach($pastMatches as $match)
+                        <div class="group relative">
+                            <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-transparent via-{{ $themeColor }} to-transparent opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                            <div class="bg-zinc-900/50 hover:bg-zinc-900/80 border border-white/5 hover:border-white/10 p-4 rounded-r-xl transition-all flex items-center justify-between gap-6">
+                                <div class="flex items-center gap-6">
+                                    <div class="text-center px-4 border-r border-white/5">
+                                        <div class="text-xs text-gray-500 font-bold uppercase mb-1">Score</div>
+                                        <div class="text-2xl font-black text-white font-[Orbitron]">{{ $match->score_team_a }} - {{ $match->score_team_b }}</div>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-white font-bold font-[Orbitron] text-lg">{{ $match->event->title ?? 'Unknown Event' }}</h4>
+                                        <div class="text-xs text-green-400 font-bold uppercase tracking-wider flex items-center gap-2">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                            Victory
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-xs text-gray-500 font-bold uppercase">{{ $match->created_at->diffForHumans() }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+             </div>
+
+             <!-- Right Column: Stats or Ads (4 cols) - Placeholder for now, maybe move Roster here later? -->
+             <div class="lg:col-span-4">
+                <!-- We can keep the roster here or leave it below. For now, let's keep the roster full width below as currently designed, 
+                and this column can be used for team stats in a future update if needed. 
+                Or we can move the Management Section here if it fits better. 
+                Actually, let's leave this empty for now to maintain the flow, or just close the grid divs if we don't want a sidebar yet.
+                Re-reading the plan, I didn't explicitly modify the layout to be a 2-column grid for the whole page. 
+                I will close the grid here and let the existing content flow below. -->
+             </div>
+        </div>
+
+        <!-- Management Section (IGL/Admin Only) -->
+        @auth
+            @php
+                $userMember = $team->members->where('user_id', auth()->id())->first();
+                $isLeader = ($userMember && $userMember->role === 'igl') || auth()->user()->isAdmin();
+            @endphp
+            @if($isLeader && $team->applications->where('status', 'pending')->count() > 0)
+            <div class="mb-12">
+                 <div class="flex items-center gap-4 mb-6">
+                    <span class="text-3xl font-black text-white font-[Orbitron]">Requests</span>
+                    <div class="bg-{{ $themeColor }} px-3 py-1 rounded-full text-xs font-bold text-white" style="background-color: {{ $themeColor }}">
+                        {{ $team->applications->where('status', 'pending')->count() }} Pending
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    @foreach($team->applications->where('status', 'pending') as $application)
+                    <div class="bg-zinc-900/80 backdrop-blur border border-white/10 rounded-xl p-6 relative group hover:border-white/30 transition-all">
+                        <div class="absolute top-0 left-0 w-1 h-full rounded-l-xl transition-colors" style="background-color: {{ $themeColor }}40"></div>
+                        
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-lg font-bold text-white">{{ $application->ingame_name }}</h3>
+                                <div class="text-xs text-gray-400 font-mono mt-1">{{ $application->ingame_id }}</div>
+                            </div>
+                             <span class="px-2 py-1 rounded bg-white/5 text-[10px] font-bold text-white uppercase">{{ $application->ingame_level }}</span>
+                        </div>
+                        
+                        <p class="text-sm text-gray-400 italic mb-6">"{{ Str::limit($application->message ?: $application->experience, 80) }}"</p>
+                        
+                        <div class="flex gap-2">
+                             <form action="{{ route('applications.accept', $application) }}" method="POST" class="flex-1">
+                                @csrf
+                                <button class="w-full py-2 rounded bg-green-500/10 text-green-500 border border-green-500/20 hover:bg-green-500 hover:text-white font-bold text-xs uppercase transition-all">Accept</button>
+                            </form>
+                            <form action="{{ route('applications.reject', $application) }}" method="POST" class="flex-1">
+                                @csrf
+                                <button class="w-full py-2 rounded bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500 hover:text-white font-bold text-xs uppercase transition-all">Reject</button>
+                            </form>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+        @endauth
+
+        <!-- Roster List -->
+        <div class="mb-16">
+            <div class="flex items-center gap-4 mb-6">
+                <h2 class="text-2xl font-bold text-white font-[Orbitron]">Active Roster</h2>
+                <div class="h-0.5 flex-1 bg-gradient-to-r from-white/10 to-transparent"></div>
+            </div>
+
+            @if($team->members->count() > 0)
+            <div class="space-y-3">
+                @foreach($team->members as $index => $member)
+                <div class="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all">
+                    <!-- Number -->
+                    <span class="text-2xl font-black text-white/20 font-[Orbitron] w-8">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
+                    
+                    <!-- Avatar -->
+                    <div class="relative w-12 h-12 flex-shrink-0">
+                        <div class="w-full h-full rounded-full bg-gradient-to-br from-zinc-800 to-black border border-white/10 flex items-center justify-center">
+                            <span class="text-lg font-bold text-white">{{ substr($member->user->name, 0, 1) }}</span>
+                        </div>
+                        @if($member->role === 'igl')
+                            <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-yellow-500 rounded-full flex items-center justify-center border-2 border-black" title="In-Game Leader">
+                                <svg class="w-2.5 h-2.5 text-black" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                            </div>
+                        @endif
+                    </div>
+
+                    <!-- Info -->
+                    <div class="flex-1">
+                        <h3 class="text-lg font-bold text-white">{{ $member->user->name }}</h3>
+                        <span class="text-xs font-bold uppercase tracking-wider text-gray-500">{{ $member->role }}</span>
+                    </div>
+
+                    <!-- Rank Badge -->
+                    @if($member->user->rank_info)
+                        <div class="px-3 py-1 rounded-full bg-white/5 border border-white/10">
+                            <span class="text-xs text-gray-300 font-mono">{{ $member->user->rank_info['rank'] ?? 'Unranked' }}</span>
+                        </div>
+                    @endif
+                </div>
+                @endforeach
+            </div>
+            @else
+            <div class="py-12 text-center bg-white/5 rounded-xl border border-white/10">
+                <svg class="w-10 h-10 mx-auto text-gray-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                <p class="text-gray-400 font-medium">No players yet</p>
+                <p class="text-gray-500 text-sm">Be the first to join this team!</p>
+            </div>
+            @endif
+        </div>
+    </div>
+</div>
+@endsection

@@ -1,0 +1,11 @@
+\chapter{GIT HISTORY}
+Version control for LAVA ESPORTS is maintained with Git to preserve change traceability and rollback safety across all modules. The repository history captures major milestones such as authentication setup, role-based access control, event workflows, team workflows, and recruiter features.
+
+Well-structured commits improve maintainability by documenting intent for each change set (schema updates, controller logic, UI improvements, and bug fixes). This supports collaborative development and faster debugging.
+
+\section{Recommended History Snapshot}
+For report submission, capture an up-to-date commit graph from the current repository using:
+\begin{verbatim}
+git log --oneline --graph --decorate --all -n 25
+\end{verbatim}
+Attach this output (or screenshot) in the final report as evidence of incremental development.
