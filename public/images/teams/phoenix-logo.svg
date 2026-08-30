@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <linearGradient id="phoenix-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff6b35"/>
+      <stop offset="50%" stop-color="#f7931e"/>
+      <stop offset="100%" stop-color="#ff4500"/>
+    </linearGradient>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1a1a2e"/>
+      <stop offset="100%" stop-color="#0f0f1a"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="95" fill="url(#bg-grad)" stroke="url(#phoenix-grad)" stroke-width="3"/>
+  <!-- Phoenix bird shape -->
+  <g filter="url(#glow)">
+    <path d="M100 40 L70 80 L50 75 L75 100 L55 130 L85 115 L100 160 L115 115 L145 130 L125 100 L150 75 L130 80 Z" 
+          fill="url(#phoenix-grad)"/>
+    <!-- Inner details -->
+    <circle cx="100" cy="90" r="12" fill="#fff" opacity="0.9"/>
+    <path d="M100 70 L95 85 L100 80 L105 85 Z" fill="#fff" opacity="0.7"/>
+  </g>
+</svg>
